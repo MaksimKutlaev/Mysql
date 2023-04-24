@@ -1,60 +1,54 @@
 USE DZ1;
 
--- 1
-CREATE TABLE sales(
-	id SERIAL PRIMARY KEY,
-	order_date DATE NOT NULL,
-	count_product VARCHAR(5) NOT NULL
+CREATE TABLE salespeople (
+snum INT NOT NULL PRIMARY KEY,
+sname VARCHAR(20) NOT NULL,
+city VARCHAR(20) NOT NULL,
+comm VARCHAR(3) NOT NULL
 );
 
-INSERT INTO sales(order_date, count_product)
-VALUES
-('2022-01-01',156),
-('2022-01-02',180),
-('2022-01-03', 21),
-('2022-01-04', 124),
-('2022-01-05', 341);
+INSERT INTO salespeople(snum, sname, city, comm)
+VALUES (1001, 'Peel', 'London', '.12'),
+(1002, 'Serrers', 'San Jose', '.13'),
+(1004, 'Motika','London', '.11'),
+(1007, 'Rifkin', 'Barcelona', '.15'),
+(1003, 'Axelrod', 'New York', '.10');
 
-SELECT*FROM sales;
-
--- 2
-SELECT id,
-	IF (count_product<100, 'Маленький заказ',
-		IF (count_product BETWEEN 100 AND 300, 'Средний заказ',
-			IF (count_product>300, 'Большой заказ', '--')
-            )
-		) AS 'Тип заказа'
-FROM sales;
-
-CREATE TABLE sales(
-	id SERIAL PRIMARY KEY,
-	order_date DATE NOT NULL,
-	count_product VARCHAR(5) NOT NULL
+CREATE TABLE customers (
+cnum INT NOT NULL PRIMARY KEY,
+cname VARCHAR(20) NOT NULL,
+city VARCHAR(20) NOT NULL,
+rating INT NOT NULL,
+snum INT NOT NULL
 );
 
--- 3
-CREATE TABLE orders(
-	id SERIAL PRIMARY KEY,
-	employee_id VARCHAR(5) NOT NULL,
-	amount VARCHAR(10) NOT NULL,
-    order_status VARCHAR(20) NOT NULL
+INSERT INTO customers(cnum, cname, city, rating, snum)
+VALUES (2001, 'Hoffman', 'London', 100, 1001),
+(2002, 'Giovanni', 'Rome', 200, 1003),
+(2003, 'Liu','San Jose', 200, 1002),
+(2004, 'Grass', 'Berlin', 300, 1002),
+(2006, 'Clemens', 'London', 100, 1001),
+(2008, 'Cisneros', 'San Jose', 300, 1007),
+(2007, 'Pereira', 'Rome', 100, 1004);
+
+
+CREATE TABLE orders1 (
+onum INT NOT NULL PRIMARY KEY,
+amt DOUBLE NOT NULL,
+odate VARCHAR(20) NOT NULL,
+cnum INT NOT NULL,
+snum INT NOT NULL
 );
 
-INSERT INTO orders(employee_id, amount, order_status)
-VALUES
-('e03', 15.00, 'OPEN'),
-('e01', 25.50, 'OPEN'),
-('e05', 100.70, 'CLOSED'),
-('e02', 22.18, 'OPEN'),
-('e04', 9.50, 'CANCELLED');
+INSERT INTO orders1(onum, amt, odate, cnum, snum)
+VALUES (3001, 18.69, '10/03/1990', 2008, 1007),
+(3003, 767.19, '10/03/1990', 2001, 1001),
+(3002, 1900.10, '10/03/1990', 2007, 1004),
+(3005, 5160.45, '10/03/1990', 2003, 1002),
+(3006, 1098.16, '10/03/1990', 2008, 1007),
+(3009, 1713.23, '10/04/1990', 200, 1002),
+(3007, 75.75, '10/04/1990', 2004, 1002),
+(3008, 4723.00, '10/05/1990', 2006, 1001),
+(3010, 1309.95, '10/06/1990', 2004, 1002),
+(3011, 9891.88, '10/06/1990', 2006, 1001);
 
-SELECT*FROM orders;
-
-SELECT*,
-	IF (order_status='OPEN', "Order is in open state",
-		IF (order_status='CLOSED', "Order is closed", 
-			IF (order_status='CANCELLED', "Order is cancelled",'-')
-            )
-		) AS 'full_order_status'
-FROM orders;
-			

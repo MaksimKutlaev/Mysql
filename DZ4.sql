@@ -104,6 +104,12 @@ from auto a1
 where a1.mark != a.mark) AS count
 FROM auto a;
 
+SELECT mark, count(*) as couunt_mark,
+(select count(*) from auto)-count(mark) as other
+FROM auto
+group by mark
+having mark='BMW';
+
 create table test_a (id INT, test varchar(10));
 create table test_b (id INT);
 insert into test_a(id, test) values
